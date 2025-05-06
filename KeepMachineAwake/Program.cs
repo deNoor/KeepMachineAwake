@@ -1,25 +1,17 @@
-﻿using Vanara.PInvoke;
-
-namespace KeepMachineAwake;
-
-internal class Program
+namespace KeepMachineAwake
 {
-    private static void Main()
+    internal static class Program
     {
-        do
+        /// <summary>
+        ///  The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        private static void Main()
         {
-            var result = (uint) Kernel32.SetThreadExecutionState(
-                Kernel32.EXECUTION_STATE.ES_CONTINUOUS
-                | Kernel32.EXECUTION_STATE.ES_SYSTEM_REQUIRED
-                | Kernel32.EXECUTION_STATE.ES_DISPLAY_REQUIRED);
-            if (result > 0)
-            {
-                Console.WriteLine($"{DateTime.Now:HH:mm:ss} continuous system and display on.");
-                break;
-            }
-            Console.WriteLine($"{DateTime.Now:HH:mm:ss} failed to {nameof(Kernel32.SetThreadExecutionState)}.");
-            Thread.Sleep(TimeSpan.FromMinutes(1));
-        } while (true);
-        Thread.Sleep(Timeout.InfiniteTimeSpan);
+            // To customize application configuration such as set high DPI settings or default font,
+            // see https://aka.ms/applicationconfiguration.
+            ApplicationConfiguration.Initialize();
+            Application.Run(new MainForm());
+        }
     }
 }
