@@ -1,0 +1,50 @@
+name: create release files
+
+on:
+  release:
+    types: [ published ]
+
+env:
+  DOTNET_SDK_VERSION: '9'
+  PROJECT_NAME: KeepMachineAwake
+  OUTPUT_ROOT: './output'
+  VERSION: ${{github.event.release.tag_name}}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        self-contained: [true, false]
+        include:
+          - self-contained: true
+            output_subdir: win64-self-contained
+          - self-contained: false
+            output_subdir: win64-framework-dependent
+    name: publish ${{matrix.output_subdir}}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: install SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{env.DOTNET_SDK_VERSION}}
+      - name: dotnet publish
+        run: >-
+             dotnet publish ./${{env.PROJECT_NAME}}
+             --configuration Release
+             --runtime win-x64
+             --property:EnableWindowsTargeting=true
+             --property:PublishSingleFile=true,Version=${{env.VERSION}}
+             --self-contained ${{matrix.self-contained}}
+             --output ${{env.OUTPUT_ROOT}}/${{matrix.output_subdir}}-${{env.VERSION}}
+      - name: zip
+        run: | 
+             cd ${{env.OUTPUT_ROOT}}
+             for i in ./*; do zip -r "${i%/}.zip" "$i"; done
+      - name: upload
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{env.OUTPUT_ROOT}}/*.zip
