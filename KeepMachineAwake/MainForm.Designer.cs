@@ -41,7 +41,7 @@ namespace KeepMachineAwake
             // TrayIcon
             // 
             TrayIcon.ContextMenuStrip = TrayIconContextMenu;
-            TrayIcon.Text = "TrayIcon";
+            TrayIcon.Text = "KeepMachineAwake";
             TrayIcon.Visible = true;
             TrayIcon.DoubleClick += TrayIcon_DoubleClick;
             // 

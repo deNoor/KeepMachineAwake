@@ -35,6 +35,7 @@ public sealed partial class MainForm : Form
             Active = state;
             mainForm.TrayIcon.Icon = _trayIcons[Active];
             mainForm.TrayIconActive.Checked = Active;
+            mainForm.TrayIcon.Text = $"Keep awake: {(Active ? "ON" : "OFF")}";
             var threadState = Kernel32.EXECUTION_STATE.ES_CONTINUOUS;
             if (Active)
             {
