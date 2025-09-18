@@ -1,17 +1,23 @@
-namespace KeepMachineAwake
+namespace KeepMachineAwake;
+
+internal static class Program
 {
-    internal static class Program
+    [STAThread]
+    private static void Main()
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        private static void Main()
+        using var singleInstanceMutex = new Mutex(true, "67aebf76-44fd-430d-93cb-2aab0eed88e5", out var createdNew);
+        if (!createdNew)
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            return;
+        }
+        try
+        {
             ApplicationConfiguration.Initialize();
             Application.Run(new MainForm());
+        }
+        finally
+        {
+            singleInstanceMutex.ReleaseMutex();
         }
     }
 }
