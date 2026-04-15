@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vanara.PInvoke.Kernel32" Version="5.0.0" />
+    <PackageReference Include="Vanara.PInvoke.Kernel32" Version="5.0.4" />
   </ItemGroup>
 
   <ItemGroup>
