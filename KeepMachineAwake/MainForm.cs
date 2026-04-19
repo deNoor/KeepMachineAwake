@@ -1,4 +1,5 @@
-using Vanara.PInvoke;
+using Windows.Win32;
+using Windows.Win32.System.Power;
 
 namespace KeepMachineAwake;
 
@@ -36,12 +37,12 @@ public sealed partial class MainForm : Form
             mainForm.TrayIcon.Icon = _trayIcons[Active];
             mainForm.TrayIconActive.Checked = Active;
             mainForm.TrayIcon.Text = $"Keep awake: {(Active ? "ON" : "OFF")}";
-            var threadState = Kernel32.EXECUTION_STATE.ES_CONTINUOUS;
+            var threadState = EXECUTION_STATE.ES_CONTINUOUS;
             if (Active)
             {
-                threadState |= Kernel32.EXECUTION_STATE.ES_SYSTEM_REQUIRED | Kernel32.EXECUTION_STATE.ES_DISPLAY_REQUIRED;
+                threadState |= EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_DISPLAY_REQUIRED;
             }
-            Kernel32.SetThreadExecutionState(threadState);
+            PInvoke.SetThreadExecutionState(threadState);
         }
 
         public void Switch(MainForm mainForm) => SetActive(mainForm, !Active);
